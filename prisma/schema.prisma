@@ -11,11 +11,25 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  firstName String
-  lastName  String?
-  email String @unique
-  profileImageURL String 
+  id              String  @id @default(uuid())
+  firstName       String
+  lastName        String?
+  email           String  @unique
+  profileImageURL String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts Post[]
+}
+
+model Post {
+  id       String  @id @default(uuid())
+  content  String
+  mediaURL String?
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
