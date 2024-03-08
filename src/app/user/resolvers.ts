@@ -2,7 +2,7 @@ import axios from "axios";
 import { prisma } from "../../clients/db";
 import { generateJWT } from "../../services/jwt";
 import { GraphqlContext } from "../interfaces";
-import {User} from "@prisma/client"
+import { User } from "@prisma/client";
 type GoogleTokenResult = {
   [key: string]: string;
 };
@@ -30,13 +30,20 @@ const queries = {
           firstName: data.given_name,
           email: data.email,
           lastName: data.family_name,
-          profileImageURL: data.picture,
+          profileImageURL: data.picture || "",
         },
       });
     }
 
     const user = await prisma.user.findUnique({ where: { email: data.email } });
 
+    if (user && user?.profileImageURL !== data.picture) {
+      await prisma.user.update({
+        where: { email: user?.email },
+        data: { profileImageURL: data.picture },
+      });
+      user.profileImageURL = data.picture;
+    }
     const jwtToken = generateJWT(user!);
     return jwtToken;
   },
@@ -54,10 +61,10 @@ const queries = {
 };
 
 const user = {
-  async posts(parent:User){
+  async posts(parent: User) {
     console.log(parent);
-    return await prisma.post.findMany({where:{authorId:parent.id}})
-  }
-}
+    return await prisma.post.findMany({ where: { authorId: parent.id } });
+  },
+};
 
-export const resolvers = { queries,user };
+export const resolvers = { queries, user };
