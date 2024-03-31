@@ -8,7 +8,7 @@ interface CreatePostData {
   mediaURL?: string;
 }
 const s3 = new S3Client({
-  region: "ap-south-1",
+  region: process.env.AWS_DEFAULT_REGION,
   credentials: {
     accessKeyId: process.env.AWS_S3_ACCESS!,
     secretAccessKey: process.env.AWS_S3_SECRET!,
@@ -31,7 +31,7 @@ const queries = {
     if (!allowedImageType.includes(imageType.split("image/")[1]))
       throw new Error("File type is not supported");
     const putObjectCommand = new PutObjectCommand({
-      Bucket: "jetcord-dev",
+      Bucket: process.env.AWS_S3_BUCKET,
       Key: `uploads/${
         contextValue.user.id
       }/posts/${Date.now().toString()}-${imageType}`,

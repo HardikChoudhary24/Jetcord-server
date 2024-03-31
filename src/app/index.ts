@@ -19,6 +19,7 @@ export const initServer = async () => {
             }
             type Mutation{
               ${Post.mutations}
+              ${User.mutations}
             }
 
         `,
@@ -29,6 +30,7 @@ export const initServer = async () => {
       },
       Mutation:{
         ...Post.resolvers.mutations,
+        ...User.resolvers.mutations,
       },
       Post:{
         ...Post.resolvers.post

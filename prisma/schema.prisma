@@ -14,6 +14,7 @@ model User {
   id              String  @id @default(uuid())
   firstName       String
   lastName        String?
+  userName        String  @unique
   email           String  @unique
   profileImageURL String
 
@@ -21,8 +22,19 @@ model User {
   updatedAt DateTime @updatedAt
 
   posts Post[]
+  following Follow[] @relation("FollowedBy")
+  followers Follow[] @relation("Following")
 }
+model Follow{
+  followedBy User @relation("FollowedBy", fields: [followedById], references: [id])
+  followedById String 
 
+  following User @relation("Following", fields: [followingId], references: [id])
+  followingId String 
+
+  @@id([followedById,followingId])
+
+}
 model Post {
   id       String  @id @default(uuid())
   content  String

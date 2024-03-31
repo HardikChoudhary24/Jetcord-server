@@ -5,7 +5,13 @@ export const types = `#graphql
         lastName:String
         email:String!
         profileImageURL:String
-
+        userName:String
         posts: [Post]
+        following:[User]
+        follower:[User]
+    }
+    type SignInInfo{
+        jwtToken:String!
+        newUser:Boolean!
     }
 `;
